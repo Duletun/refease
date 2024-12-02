@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Профиль пользователя</title>
+</head>
+<body>
+    <h1>Профиль пользователя</h1>
+    <p>Номер телефона: {{ user.phone_number }}</p>
+    <p>Ваш инвайт-код: {{ user.invite_code }}</p>
+    <p>Активированный инвайт-код: {{ user.activated_invite_code|default:"Не активирован" }}</p>
+    <h2>Рефералы:</h2>
+    {% if referrals %}
+        <ul>
+            {% for ref in referrals %}
+                <li>{{ ref.phone_number }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>У вас нет рефералов.</p>
+    {% endif %}
+    <a href="{% url 'activate_invite' %}">Активировать инвайт-код</a>
+</body>
+</html>
