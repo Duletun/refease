@@ -24,9 +24,10 @@ class PhoneVerificationView(APIView):
             cache.set(phone_number, code, timeout=300)
             # Имитация задержки и отправки СМС
             time.sleep(2)
-            print(f"Отправлен код {code} на номер {phone_number}")
-            return Response({'message': 'Код отправлен'}, status=status.HTTP_200_OK)
+            # ВОЗВРАЩАЕМ КОД В ОТВЕТЕ (только для тестирования)
+            return Response({'message': 'Код отправлен', 'code': code}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CodeVerificationView(APIView):
     def post(self, request):
@@ -80,34 +81,33 @@ def phone_view(request):
         if form.is_valid():
             phone_number = form.cleaned_data['phone_number']
             code = str(random.randint(1000, 9999))
-            cache.set(phone_number, code, timeout=300)
-            time.sleep(2)
+            cache.set(phone_number, code, timeout=300)  # Код сохраняется в кэше на 5 минут
+            time.sleep(2)  # Имитация задержки отправки кода
             request.session['phone_number'] = phone_number
-            # В реальном приложении код отправляется по СМС
-            print(f"Отправлен код {code} на номер {phone_number}")
-            return redirect('code')
+            return redirect('code')  # Перенаправление на страницу ввода кода
     else:
         form = PhoneForm()
     return render(request, 'phone.html', {'form': form})
 
+
 def code_view(request):
     phone_number = request.session.get('phone_number')
     if not phone_number:
-        return redirect('phone')
+        return redirect('phone')  # Если номер телефона не сохранен в сессии, перенаправить на страницу ввода номера
+    code = cache.get(phone_number)  # Получение кода из кэша
     if request.method == 'POST':
         form = CodeForm(request.POST)
         if form.is_valid():
-            code = form.cleaned_data['code']
-            cached_code = cache.get(phone_number)
-            if cached_code == code:
+            input_code = form.cleaned_data['code']
+            if input_code == code:
                 user, created = User.objects.get_or_create(phone_number=phone_number)
                 request.session['user_id'] = user.id
-                return redirect('profile')
+                return redirect('profile')  # Перенаправление на страницу профиля
             else:
                 form.add_error('code', 'Неверный код')
     else:
         form = CodeForm()
-    return render(request, 'code.html', {'form': form})
+    return render(request, 'code.html', {'form': form, 'code': code})
 
 def profile_view(request):
     user_id = request.session.get('user_id')
