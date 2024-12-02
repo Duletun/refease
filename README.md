@@ -231,4 +231,4 @@ POST /api/profile/<phone_number>/
 ## Коллекция Postman
 
 Коллекция Postman, включающая все эндпоинты, доступна для скачивания.
-
+[Скачать коллекцию Postman](https://disk.yandex.ru/d/vKgeCS6-sAqDQw?download=1)
