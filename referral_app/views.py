@@ -1,5 +1,3 @@
-# referral_app/views.py
-
 from django.shortcuts import render, redirect
 from django.core.cache import cache
 from .models import User
@@ -12,8 +10,6 @@ from .serializers import PhoneSerializer, CodeSerializer, ProfileSerializer, Act
 
 import random
 import time
-
-# Классы для API
 
 class PhoneVerificationView(APIView):
     def post(self, request):
