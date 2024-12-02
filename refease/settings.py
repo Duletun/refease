@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-nxe2pba8_j=%urg0iml6ezkyyf0x8hmopg5ujfsv$o95y@dvf+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['refease.onrender.com']
 
 AUTH_USER_MODEL = 'referral_app.User'
 CACHES = {
